@@ -1,21 +1,16 @@
-name: Test Script API GitHub
+name: CI Script et Conteneur Docker
 
 on: [push]
 
 jobs:
-  run-python-script:
+  build-and-test:
     runs-on: ubuntu-latest
     steps:
       - name: Récupérer le code du dépôt
         uses: actions/checkout@v4
 
-      - name: Configurer Python
-        uses: actions/setup-python@v5
-        with:
-          python-version: '3.10'
+      - name: Construire l'image Docker
+        run: docker build -t mon-script-github .
 
-      - name: Installer les dépendances
-        run: pip install requests
-
-      - name: Exécuter le script API
-        run: python github_api.py
+      - name: Exécuter le conteneur Docker
+        run: docker run --rm mon-script-github
