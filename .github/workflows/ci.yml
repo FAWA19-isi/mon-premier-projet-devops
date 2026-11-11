@@ -1,16 +1,20 @@
-name: CI Script et Conteneur Docker
+name: CI Site Web Docker
 
 on: [push]
 
 jobs:
-  build-and-test:
+  build-and-test-web:
     runs-on: ubuntu-latest
     steps:
       - name: Récupérer le code du dépôt
         uses: actions/checkout@v4
 
-      - name: Construire l'image Docker
-        run: docker build -t mon-script-github .
+      - name: Construire l'image Docker Nginx
+        run: docker build -t mon-site-devops .
 
-      - name: Exécuter le conteneur Docker
-        run: docker run --rm mon-script-github
+      - name: Démarrer le conteneur et tester la page HTML
+        run: |
+          docker run -d -p 8080:80 --name web-test mon-site-devops
+          sleep 2
+          curl -f http://localhost:8080 | grep "Bravo FAWA19-isi"
+          docker stop web-test
